@@ -1,16 +1,20 @@
 #' Check and Install Missing Packages
 #'
-#' This function checks if a series of packages are installed,
-#' and installs those that are not installed yet. It also prints
-#' messages to indicate which packages are already installed,
-#' and which are being installed.
+#' This function checks whether each package in a specified list is installed.
+#' If any packages are missing, they are automatically installed. The function
+#' also provides messages to indicate the status of each package, either
+#' confirming that it's already installed or notifying the user of the
+#' installation progress.
 #'
-#' @param packages A character vector of package names to check and install if necessary.
-#' @return NULL. The function is called for its side effect of installing missing packages.
+#' @param packages A character vector of package names that need to be checked
+#'   and possibly installed.
+#' @return NULL. This function primarily generates side effects (installing
+#'   missing packages) and outputs messages to the console.
 #' @examples
 #' \dontrun{
 #' check_install_packages(c("dplyr", "ggplot2"))
 #' }
+#' @seealso \code{\link{install.packages}}, \code{\link{installed.packages}}
 #' @importFrom utils installed.packages install.packages
 #' @export
 check_install_packages <- function(packages) {
@@ -33,16 +37,20 @@ check_install_packages <- function(packages) {
 
 #' Load Specified Packages
 #'
-#' This function loads a series of packages into the R session.
-#' It also prints messages to indicate which packages are being loaded.
+#' This function loads a list of specified packages into the current R session.
+#' For each package, it prints messages to inform the user about the loading
+#' process, indicating whether loading is successful.
 #'
-#' @param packages A character vector of package names to load.
-#' @return NULL. The function is called for its side effect of loading packages.
+#' @param packages A character vector of package names that need to be loaded
+#'   into the session.
+#' @return NULL. This function is used for its side effects of loading packages
+#'   and providing console messages.
 #' @examples
 #' \dontrun{
 #' load_packages(c("dplyr", "ggplot2"))
 #' }
 #' @export
+#' @seealso \code{\link{library}}
 load_packages <- function(packages) {
   # Load each package and print status messages
   for (pkg in packages) {
@@ -54,15 +62,18 @@ load_packages <- function(packages) {
 
 #' Update Specified Packages
 #'
-#' This function updates a specified series of packages to the latest version
-#' on CRAN, including their dependencies.
+#' This function updates specified packages to their latest available versions
+#' on CRAN, along with their dependencies. It reports on the progress of each
+#' update to help users track the changes.
 #'
-#' @param packages A character vector of package names to update.
-#' @return NULL. The function is called for its side effect of updating packages.
+#' @param packages A character vector of package names that should be updated.
+#' @return NULL. The function's primary role is to create side effects by
+#'   updating packages and notifying users about the process via messages.
 #' @examples
 #' \dontrun{
 #' update_packages(c("dplyr", "ggplot2"))
 #' }
+#' @seealso \code{\link{update.packages}}
 #' @importFrom utils update.packages
 #' @export
 update_packages <- function(packages) {

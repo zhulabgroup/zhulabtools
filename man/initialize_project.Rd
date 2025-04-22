@@ -2,7 +2,7 @@
 % Please edit documentation in R/project-setup.R
 \name{initialize_project}
 \alias{initialize_project}
-\title{Initialize R Project}
+\title{Initialize an R Project Structure}
 \usage{
 initialize_project(
   project_path = ".",
@@ -11,17 +11,22 @@ initialize_project(
 )
 }
 \arguments{
-\item{project_path}{Path to the project root directory, default is current directory.}
+\item{project_path}{A character string specifying the path to the project root directory.
+The default is the current working directory (".").}
 
-\item{subfolders}{A character vector of subfolder names to create, default is c("R", "tests", "vignettes").}
+\item{subfolders}{A character vector indicating the names of subfolders to be created within
+the project directory. The default subfolders are \code{c("R", "tests", "vignettes")}.}
 
-\item{overwrite_gitignore}{Logical, whether to overwrite existing .gitignore file, default is FALSE.}
+\item{overwrite_gitignore}{A logical value indicating whether to overwrite an existing
+.gitignore file in the project directory. Defaults to \code{FALSE}.}
 }
 \value{
-Logical value indicating if the initialization was successful.
+A logical value (\code{TRUE}) indicating if the initialization was successful.
+The function is primarily used for its side-effect of creating folders and a .gitignore file.
 }
 \description{
-Initialize an R project folder with standard subfolders and a .gitignore file.
+This function sets up a standardized file structure for an R project within a specified directory.
+It creates specified subfolders and a .gitignore file to manage unwanted files in version control.
 }
 \examples{
 \dontrun{
@@ -38,4 +43,7 @@ initialize_project(
   overwrite_gitignore = TRUE
 )
 }
+}
+\seealso{
+\code{\link{dir.create}}, \code{\link{file.path}}, \code{\link{writeLines}}
 }

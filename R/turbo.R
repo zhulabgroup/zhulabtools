@@ -1,22 +1,27 @@
-#' Create Symbolic Link to UMich Turbo
+#' Create a Symbolic Link to UMich Turbo Storage
 #'
-#' Create a symbolic link in the project directory to UMich Turbo Research Storage.
+#' This function generates a symbolic link within a project directory pointing to a specified location
+#' on the University of Michigan Turbo Research Storage system. It determines the appropriate mount point
+#' based on the operating system and creates the link accordingly.
 #'
-#' @param project_symlink Path relative to the project root where the symbolic link will be created.
-#' @param turbo_target Path relative to the Turbo mount point.
-#' @param turbo_volume Name of the Turbo volume, default is 'seas-zhukai'.
+#' @param project_symlink A character string defining the path, relative to the project root, where the symbolic link will be created.
+#' @param turbo_target A character string specifying the path, relative to the Turbo mount point, where the symbolic link should point.
+#' @param turbo_volume A character string representing the name of the Turbo volume. The default volume is 'seas-zhukai'.
 #'
-#' @return Logical value indicating if the symbolic link was successfully created.
+#' @return A logical value indicating whether the symbolic link was successfully created (\code{TRUE}) or not (\code{FALSE}).
+#'   The function mainly operates via side effects (creating or managing symbolic links) and informs the user through messages.
 #' @examples
 #' \dontrun{
+#' # Example to create a symbolic link named "data" pointing to "turbo-folder" on the Turbo storage
 #' create_symlink_turbo("data", "turbo-folder")
 #' }
+#' @seealso \code{\link{file.symlink}}, \code{\link{unlink}}, \code{\link{Sys.info}}, \code{\link[R.utils]{createLink}}
 #' @export
 create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "seas-zhukai") {
-  # Detect operating system
+  # Detect the operating system
   os_name <- Sys.info()[["sysname"]]
 
-  # Determine the mount point based on OS
+  # Determine the Turbo mount point based on the operating system
   turbo_mount_point <- switch(os_name,
     Darwin = file.path("/Volumes", turbo_volume), # macOS
     Linux = file.path("/nfs/turbo", turbo_volume), # Linux
@@ -29,14 +34,14 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
   project_root <- here::here()
   symlink <- file.path(project_root, project_symlink)
 
-  # Check if symlink exists and is valid
+  # Check if the symbolic link exists and is valid
   symlink_exists <- if (os_name == "Windows") {
     file.exists(symlink)
   } else {
     file.exists(symlink) && (Sys.readlink(symlink) == target)
   }
 
-  # If symlink is valid, avoid recreating it to save time
+  # Avoid recreating a valid symlink to save time
   if (symlink_exists) {
     message("Valid symbolic link already exists: ", symlink, " -> ", target)
     return(TRUE)
@@ -48,7 +53,7 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
     unlink(symlink, recursive = TRUE)
   }
 
-  # Create symbolic link based on OS
+  # Create symbolic link based on the operating system
   success <- switch(os_name,
     Darwin = file.symlink(target, symlink), # macOS
     Linux = file.symlink(target, symlink), # Linux

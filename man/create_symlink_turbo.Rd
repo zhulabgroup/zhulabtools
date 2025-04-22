@@ -2,7 +2,7 @@
 % Please edit documentation in R/turbo.R
 \name{create_symlink_turbo}
 \alias{create_symlink_turbo}
-\title{Create Symbolic Link to UMich Turbo}
+\title{Create a Symbolic Link to UMich Turbo Storage}
 \usage{
 create_symlink_turbo(
   project_symlink,
@@ -11,20 +11,27 @@ create_symlink_turbo(
 )
 }
 \arguments{
-\item{project_symlink}{Path relative to the project root where the symbolic link will be created.}
+\item{project_symlink}{A character string defining the path, relative to the project root, where the symbolic link will be created.}
 
-\item{turbo_target}{Path relative to the Turbo mount point.}
+\item{turbo_target}{A character string specifying the path, relative to the Turbo mount point, where the symbolic link should point.}
 
-\item{turbo_volume}{Name of the Turbo volume, default is 'seas-zhukai'.}
+\item{turbo_volume}{A character string representing the name of the Turbo volume. The default volume is 'seas-zhukai'.}
 }
 \value{
-Logical value indicating if the symbolic link was successfully created.
+A logical value indicating whether the symbolic link was successfully created (\code{TRUE}) or not (\code{FALSE}).
+The function mainly operates via side effects (creating or managing symbolic links) and informs the user through messages.
 }
 \description{
-Create a symbolic link in the project directory to UMich Turbo Research Storage.
+This function generates a symbolic link within a project directory pointing to a specified location
+on the University of Michigan Turbo Research Storage system. It determines the appropriate mount point
+based on the operating system and creates the link accordingly.
 }
 \examples{
 \dontrun{
+# Example to create a symbolic link named "data" pointing to "turbo-folder" on the Turbo storage
 create_symlink_turbo("data", "turbo-folder")
 }
+}
+\seealso{
+\code{\link{file.symlink}}, \code{\link{unlink}}, \code{\link{Sys.info}}, \code{\link[R.utils]{createLink}}
 }

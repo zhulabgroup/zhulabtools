@@ -7,17 +7,22 @@
 update_packages(packages)
 }
 \arguments{
-\item{packages}{A character vector of package names to update.}
+\item{packages}{A character vector of package names that should be updated.}
 }
 \value{
-NULL. The function is called for its side effect of updating packages.
+NULL. The function's primary role is to create side effects by
+updating packages and notifying users about the process via messages.
 }
 \description{
-This function updates a specified series of packages to the latest version
-on CRAN, including their dependencies.
+This function updates specified packages to their latest available versions
+on CRAN, along with their dependencies. It reports on the progress of each
+update to help users track the changes.
 }
 \examples{
 \dontrun{
 update_packages(c("dplyr", "ggplot2"))
 }
+}
+\seealso{
+\code{\link{update.packages}}
 }

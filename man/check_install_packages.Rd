@@ -7,19 +7,25 @@
 check_install_packages(packages)
 }
 \arguments{
-\item{packages}{A character vector of package names to check and install if necessary.}
+\item{packages}{A character vector of package names that need to be checked
+and possibly installed.}
 }
 \value{
-NULL. The function is called for its side effect of installing missing packages.
+NULL. This function primarily generates side effects (installing
+missing packages) and outputs messages to the console.
 }
 \description{
-This function checks if a series of packages are installed,
-and installs those that are not installed yet. It also prints
-messages to indicate which packages are already installed,
-and which are being installed.
+This function checks whether each package in a specified list is installed.
+If any packages are missing, they are automatically installed. The function
+also provides messages to indicate the status of each package, either
+confirming that it's already installed or notifying the user of the
+installation progress.
 }
 \examples{
 \dontrun{
 check_install_packages(c("dplyr", "ggplot2"))
 }
+}
+\seealso{
+\code{\link{install.packages}}, \code{\link{installed.packages}}
 }

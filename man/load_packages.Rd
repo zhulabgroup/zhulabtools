@@ -7,17 +7,23 @@
 load_packages(packages)
 }
 \arguments{
-\item{packages}{A character vector of package names to load.}
+\item{packages}{A character vector of package names that need to be loaded
+into the session.}
 }
 \value{
-NULL. The function is called for its side effect of loading packages.
+NULL. This function is used for its side effects of loading packages
+and providing console messages.
 }
 \description{
-This function loads a series of packages into the R session.
-It also prints messages to indicate which packages are being loaded.
+This function loads a list of specified packages into the current R session.
+For each package, it prints messages to inform the user about the loading
+process, indicating whether loading is successful.
 }
 \examples{
 \dontrun{
 load_packages(c("dplyr", "ggplot2"))
 }
+}
+\seealso{
+\code{\link{library}}
 }
