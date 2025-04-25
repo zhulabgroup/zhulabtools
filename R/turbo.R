@@ -56,7 +56,7 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
   }
 
   # Check if the new symlink to create is within the project directory
-  if (!startsWith(normalizePath(symlink, mustWork = FALSE), normalizePath(project_root))) {
+  if (!startsWith(normalizePath(dirname(symlink), mustWork = FALSE), normalizePath(project_root))) {
     stop("The symlink path must be within the R project directory: ", project_root)
   }
 
