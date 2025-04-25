@@ -11,7 +11,8 @@ create_symlink_turbo(
 )
 }
 \arguments{
-\item{project_symlink}{A character string defining the path, relative to the project root, where the symbolic link will be created.}
+\item{project_symlink}{A character string defining the path, relative to the project root, where the symbolic link will be created.
+This must be a path within the R project directory. It cannot be a path on Turbo.}
 
 \item{turbo_target}{A character string specifying the path, relative to the Turbo mount point, where the symbolic link should point.}
 
@@ -24,7 +25,9 @@ The function mainly operates via side effects (creating or managing symbolic lin
 \description{
 This function generates a symbolic link within a project directory pointing to a specified location
 on the University of Michigan Turbo Research Storage system. It determines the appropriate mount point
-based on the operating system and creates the link accordingly.
+based on the operating system and creates the link accordingly. Importantly, the symbolic link must
+reside within the current R project's directory. The link cannot be on Turbo because symbolic links
+on Turbo differ across operating systems.
 }
 \examples{
 \dontrun{
