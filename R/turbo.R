@@ -6,7 +6,7 @@
 #' reside within the current R project's directory. The link cannot be on Turbo because symbolic links
 #' on Turbo differ across operating systems.
 #'
-#' @param project_symlink A character string defining the path, relative to the project root, where the symbolic link will be created. 
+#' @param project_symlink A character string defining the path, relative to the project root, where the symbolic link will be created.
 #' This must be a path within the R project directory. It cannot be a path on Turbo.
 #' @param turbo_target A character string specifying the path, relative to the Turbo mount point, where the symbolic link should point.
 #' @param turbo_volume A character string representing the name of the Turbo volume. The default volume is 'seas-zhukai'.
@@ -37,7 +37,7 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
   if (!file.exists(target)) {
     stop("Target path does not exist: ", target)
   }
-  
+
   # Construct the symbolic link path
   project_root <- here::here()
   symlink <- file.path(project_root, project_symlink)
@@ -55,18 +55,18 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
     return(TRUE)
   }
 
-  # Remove existing symlink if it exists but is not valid
   # Check if the new symlink to create is within the project directory
   if (!startsWith(normalizePath(symlink, mustWork = FALSE), normalizePath(project_root))) {
     stop("The symlink path must be within the R project directory: ", project_root)
   }
-  
+
+  # Remove the existing symlink if it exists but is not valid
   if ((os_name == "Windows" && file.exists(symlink)) || (os_name != "Windows" && (file.exists(symlink) || !is.na(Sys.readlink(symlink))))) {
     message("Removing existing invalid symlink: ", symlink)
     unlink(symlink, recursive = TRUE)
   }
 
-  # Create symbolic link based on the operating system
+  # Create the new symbolic link based on the operating system
   success <- switch(os_name,
     Darwin = file.symlink(target, symlink), # macOS
     Linux = file.symlink(target, symlink), # Linux
