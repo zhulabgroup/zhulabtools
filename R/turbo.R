@@ -29,8 +29,13 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
     stop("Unsupported operating system: ", os_name)
   )
 
-  # Construct target and symlink paths
+  # Construct the target path and check if it exists
   target <- file.path(turbo_mount_point, turbo_target)
+  if (!file.exists(target)) {
+    stop("Target path does not exist: ", target)
+  }
+  
+  # Construct the symbolic link path
   project_root <- here::here()
   symlink <- file.path(project_root, project_symlink)
 
