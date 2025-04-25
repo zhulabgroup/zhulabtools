@@ -54,7 +54,7 @@ create_symlink_turbo <- function(project_symlink, turbo_target, turbo_volume = "
 
   # Remove existing symlink if it exists but is not valid
   if ((os_name == "Windows" && file.exists(symlink)) || (os_name != "Windows" && (file.exists(symlink) || !is.na(Sys.readlink(symlink))))) {
-    message("Removing existing symlink: ", symlink)
+    message("Removing existing invalid symlink: ", symlink)
     unlink(symlink, recursive = TRUE)
   }
 
