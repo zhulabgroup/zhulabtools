@@ -5,6 +5,9 @@ temp
 # Mac files
 .DS_Store
 
+# Quarto files
+/.quarto/
+
 # R Markdown files
 *.docx
 *.html
