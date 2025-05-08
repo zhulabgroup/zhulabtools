@@ -6,7 +6,7 @@
 \usage{
 initialize_project(
   project_path = ".",
-  subfolders = c("R", "tests", "vignettes"),
+  subfolders = c("R", "temp", "vignettes"),
   overwrite_gitignore = FALSE
 )
 }
@@ -15,7 +15,7 @@ initialize_project(
 The default is the current working directory (".").}
 
 \item{subfolders}{A character vector indicating the names of subfolders to be created within
-the project directory. The default subfolders are \code{c("R", "tests", "vignettes")}.}
+the project directory. The default subfolders are \code{c("R", "temp", "vignettes")}.}
 
 \item{overwrite_gitignore}{A logical value indicating whether to overwrite an existing
 .gitignore file in the project directory. Defaults to \code{FALSE}.}

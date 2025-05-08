@@ -6,7 +6,7 @@
 #' @param project_path A character string specifying the path to the project root directory.
 #'   The default is the current working directory (".").
 #' @param subfolders A character vector indicating the names of subfolders to be created within
-#'   the project directory. The default subfolders are \code{c("R", "tests", "vignettes")}.
+#'   the project directory. The default subfolders are \code{c("R", "temp", "vignettes")}.
 #' @param overwrite_gitignore A logical value indicating whether to overwrite an existing
 #'   .gitignore file in the project directory. Defaults to \code{FALSE}.
 #'
@@ -29,7 +29,7 @@
 #' }
 #' @seealso \code{\link{dir.create}}, \code{\link{file.path}}, \code{\link{writeLines}}
 #' @export
-initialize_project <- function(project_path = ".", subfolders = c("R", "tests", "vignettes"), overwrite_gitignore = FALSE) {
+initialize_project <- function(project_path = ".", subfolders = c("R", "temp", "vignettes"), overwrite_gitignore = FALSE) {
   # Create the subfolders if they do not exist
   for (folder in subfolders) {
     folder_path <- file.path(project_path, folder)

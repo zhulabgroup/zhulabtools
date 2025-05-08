@@ -1,6 +1,6 @@
 # Project folders
 data
-tests
+temp
 
 # Mac files
 .DS_Store
