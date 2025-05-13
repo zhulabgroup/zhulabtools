@@ -52,7 +52,7 @@ create_subfolders <- function(project_path = ".", subfolders = c("R", "vignettes
 #' @export
 create_gitignore <- function(project_path = ".", overwrite_gitignore = FALSE) {
   # Define path to the template .gitignore file
-  template_gitignore_path <- system.file("templates/gitignore_template.txt", package = "zhulabtools")
+  template_gitignore_path <- system.file("templates/gitignore.txt", package = "zhulabtools")
 
   if (template_gitignore_path == "") {
     stop("The .gitignore template could not be found in the package.")
