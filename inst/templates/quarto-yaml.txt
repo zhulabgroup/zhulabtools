@@ -1,0 +1,17 @@
+project:
+  output-dir: temp
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+    code-tools:
+      source: false
+    toc: true
+    theme:
+      dark: darkly
+      light: flatly
+embed-resources: true
+dpi: 300
+
+bibliography: references.bib

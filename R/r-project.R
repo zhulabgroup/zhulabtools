@@ -75,3 +75,48 @@ create_gitignore <- function(project_path = ".", overwrite_gitignore = FALSE) {
 
   return(TRUE)
 }
+
+#' Create Quarto YAML File
+#'
+#' This function creates a _quarto.yml file in the project's root directory based on a template.
+#'
+#' @param project_path A character string specifying the path to the project root directory.
+#'   The default is the current working directory (".").
+#' @param overwrite_quarto A logical value indicating whether to overwrite an existing
+#'   _quarto.yml file in the project directory. Defaults to \code{FALSE}.
+#'
+#' @return A logical value (\code{TRUE}) indicating if the _quarto.yml file creation was successful.
+#' @examples
+#' \dontrun{
+#' # Create or overwrite _quarto.yml in the current directory
+#' create_quarto_yaml(overwrite_quarto = TRUE)
+#'
+#' # Create _quarto.yml in a specified directory without overwriting
+#' create_quarto_yaml("/path/to/your/project")
+#' }
+#' @export
+create_quarto_yaml <- function(project_path = ".", overwrite_quarto = FALSE) {
+  # Define path to the template _quarto.yml file
+  template_quarto_path <- system.file("templates/quarto-yaml.txt", package = "zhulabtools")
+
+  if (template_quarto_path == "") {
+    stop("The _quarto.yml template could not be found in the package.")
+  }
+
+  # Read the template file content
+  quarto_content <- readLines(template_quarto_path)
+
+  # Path to _quarto.yml file
+  quarto_path <- file.path(project_path, "_quarto.yml")
+
+  # Check if _quarto.yml file already exists and whether to overwrite it
+  if (!file.exists(quarto_path) || overwrite_quarto) {
+    # Write the _quarto.yml template content to the project root
+    writeLines(quarto_content, con = quarto_path)
+    message("Created _quarto.yml file at: ", quarto_path)
+  } else {
+    message("_quarto.yml file already exists at: ", quarto_path)
+  }
+
+  return(TRUE)
+}

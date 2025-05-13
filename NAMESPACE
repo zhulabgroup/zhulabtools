@@ -2,6 +2,7 @@
 
 export(check_install_packages)
 export(create_gitignore)
+export(create_quarto_yaml)
 export(create_subfolders)
 export(create_symlink_turbo)
 export(load_packages)
