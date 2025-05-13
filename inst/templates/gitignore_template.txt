@@ -1,7 +1,3 @@
-# Project folders
-data
-tests
-
 # Mac files
 .DS_Store
 
