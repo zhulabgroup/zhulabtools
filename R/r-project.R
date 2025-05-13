@@ -53,17 +53,17 @@ create_subfolders <- function(project_path = ".", subfolders = c("R", "vignettes
 create_gitignore <- function(project_path = ".", overwrite_gitignore = FALSE) {
   # Define path to the template .gitignore file
   template_gitignore_path <- system.file("templates/gitignore.txt", package = "zhulabtools")
-
+  
   if (template_gitignore_path == "") {
     stop("The .gitignore template could not be found in the package.")
   }
-
+  
   # Read the template file content
   gitignore_content <- readLines(template_gitignore_path)
-
+  
   # Path to .gitignore file
   gitignore_path <- file.path(project_path, ".gitignore")
-
+  
   # Check if .gitignore file already exists and whether to overwrite it
   if (!file.exists(gitignore_path) || overwrite_gitignore) {
     # Write the .gitignore template content to the project root
@@ -72,7 +72,7 @@ create_gitignore <- function(project_path = ".", overwrite_gitignore = FALSE) {
   } else {
     message(".gitignore file already exists at: ", gitignore_path)
   }
-
+  
   return(TRUE)
 }
 
@@ -98,17 +98,17 @@ create_gitignore <- function(project_path = ".", overwrite_gitignore = FALSE) {
 create_quarto_yaml <- function(project_path = ".", overwrite_quarto = FALSE) {
   # Define path to the template _quarto.yml file
   template_quarto_path <- system.file("templates/quarto-yaml.txt", package = "zhulabtools")
-
+  
   if (template_quarto_path == "") {
     stop("The _quarto.yml template could not be found in the package.")
   }
-
+  
   # Read the template file content
   quarto_content <- readLines(template_quarto_path)
-
+  
   # Path to _quarto.yml file
   quarto_path <- file.path(project_path, "_quarto.yml")
-
+  
   # Check if _quarto.yml file already exists and whether to overwrite it
   if (!file.exists(quarto_path) || overwrite_quarto) {
     # Write the _quarto.yml template content to the project root
@@ -117,6 +117,6 @@ create_quarto_yaml <- function(project_path = ".", overwrite_quarto = FALSE) {
   } else {
     message("_quarto.yml file already exists at: ", quarto_path)
   }
-
+  
   return(TRUE)
 }
