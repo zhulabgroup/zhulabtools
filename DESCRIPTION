@@ -3,14 +3,20 @@ Title: Tools for Zhu Lab at UMich
 Version: 1.0.0
 Authors@R: 
     person("Kai", "Zhu", , "zhukai@umich.edu", role = c("aut", "cre"))
-Description: A collection of tools for managing projects and data in the Zhu Lab at the University of Michigan.
+Description: A collection of tools for processing GBIF data in the Zhu Lab at the University of Michigan.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
-    here (>= 1.0.1),
-    R.utils (>= 2.10.1)
+    R.utils (>= 2.10.1),
+    CoordinateCleaner (>= 3.0.1),
+    arrow (>= 19.0.1.1),
+    cli (>= 3.6.4),
+    tidyverse (>= 2.0.0),
+    rgbif (>= 3.8.1)
 Suggests: 
-    roxygen2 (>= 7.1.1)
+    roxygen2 (>= 7.1.1),
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
