@@ -20,7 +20,7 @@ gbif_snapshot_retrieve <- function(save_path, gbif_snapshot_path, taxonomy_list)
   dir.create(save_path, recursive = TRUE, showWarnings = FALSE)
   
   class_order_list <- taxonomy_list |>
-    distinct(class, order)
+    dplyr::distinct(class, order)
   
   for (i in seq_len(nrow(class_order_list))) {
     class_val <- class_order_list$class[i]
@@ -53,11 +53,11 @@ process_taxonomy_record <- function(taxonomy_record, parquet_path, save_path) {
   
   species_keys <- taxonomy_record |>
     filter(rank == "SPECIES") |>
-    pull(usageKey) |>
+    dplyr::pull(usageKey) |>
     unique()
   genus_list <- taxonomy_record |>
     filter(rank == "GENUS") |>
-    pull(genus) |>
+    dplyr::pull(genus) |>
     unique()
   
   cli_text("Number of species keys: {length(species_keys)}")
@@ -67,12 +67,12 @@ process_taxonomy_record <- function(taxonomy_record, parquet_path, save_path) {
     filter(specieskey %in% species_keys | genus %in% genus_list) |>
     filter(!is.na(decimallatitude) & !is.na(decimallongitude)) |>
     filter(occurrencestatus == "PRESENT") |>
-    select(
+    dplyr::select(
       species, genus, family, specieskey, decimallongitude, decimallatitude,
       countrycode, taxonkey, basisofrecord, occurrencestatus,
       lastinterpreted, issue, year, coordinateprecision, coordinateuncertaintyinmeters
     ) |>
-    collect()
+    dplyr::collect()
   
   for (key in species_keys) {
     species_save_path <- file.path(save_path, paste0("specieskey_", key, ".rds"))

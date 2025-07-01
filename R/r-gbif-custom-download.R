@@ -17,7 +17,7 @@
 #' @export
 gbif_custom_download <- function(lotvs_backbone_path) {
   # Load lotvs_backbone from provided path
-  lotvs_backbone <- read_rds(lotvs_backbone_path)
+  lotvs_backbone <- readr::read_rds(lotvs_backbone_path)
   taxon_chunks <- split_into_chunks(lotvs_backbone$usageKey, 1000)
   
   total_occurrence_count <- get_total_occurrence_count(taxon_chunks)
@@ -57,7 +57,7 @@ split_into_chunks <- function(x, chunk_size) {
 get_total_occurrence_count <- function(taxon_chunks) {
   total_occurrence_count <- 0
   for (chunk in taxon_chunks) {
-    taxon_list <- str_c(chunk, collapse = ";")
+    taxon_list <- stringr::str_c(chunk, collapse = ";")
     count <- occ_count(
       taxonKey = taxon_list,
       hasCoordinate = TRUE,
@@ -85,12 +85,12 @@ get_total_occurrence_count <- function(taxon_chunks) {
 #' submit_occ_download("some_taxon_key")
 #' }
 submit_occ_download <- function(lotvs_backbone_usage_key) {
-  occ_download(
-    pred_in("taxonKey", lotvs_backbone_usage_key),
-    pred("hasCoordinate", TRUE),
-    pred("hasGeospatialIssue", FALSE),
-    pred("occurrenceStatus", "PRESENT"),
-    pred("basisOfRecord", "HUMAN_OBSERVATION"),
+  rgbif::occ_download(
+    rgbif::pred_in("taxonKey", lotvs_backbone_usage_key),
+    rgbif::pred("hasCoordinate", TRUE),
+    rgbif::pred("hasGeospatialIssue", FALSE),
+    rgbif::pred("occurrenceStatus", "PRESENT"),
+    rgbif::pred("basisOfRecord", "HUMAN_OBSERVATION"),
     format = "SIMPLE_PARQUET"
   )
 }

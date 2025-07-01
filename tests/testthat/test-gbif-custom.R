@@ -1,6 +1,6 @@
 test_that("gbif_custom_download() works with a single taxon", {
   skip_on_cran()
-  path <- here("tests/testthat/tmp/gbif-custom/occurrence.parquet")
+  path <- here::here("tests/testthat/tmp/gbif-custom/occurrence.parquet")
   if (file.exists(path)) skip("Customized GBIF file already downloaded.")
   
   
@@ -13,7 +13,7 @@ test_that("gbif_custom_download() works with a single taxon", {
 
 test_that("gbif_custom_retrieve() runs without error and creates output", {
   skip_on_cran()
-  path <- here("tests/testthat/tmp/gbif-custom/occurrence.parquet")
+  path <- here::here("tests/testthat/tmp/gbif-custom/occurrence.parquet")
   if (!file.exists(path)) skip("Customized GBIF file not found. Please check your GBIF account or use the link in example_parquet to download manually.")
   
   lotvs_backbone_path <- here::here("tests/testthat/tmp/test-taxonomy.rds")
