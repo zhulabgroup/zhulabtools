@@ -1,6 +1,6 @@
 Package: zhulabtools
 Title: Tools for Zhu Lab at UMich
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: 
     person("Kai", "Zhu", email = "zhukai@umich.edu", role = c("aut", "cre"))
 Description: Provides utility functions for managing projects, files, and data workflows in the Zhu Lab at the University of Michigan.
