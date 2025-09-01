@@ -1,5 +1,5 @@
 project:
-  output-dir: temp
+  output-dir: output
 
 format:
   html:
