@@ -3,4 +3,5 @@
 ^Makefile$
 ^doc$
 ^Meta$
+^scratch$
 ^tests$
