@@ -1,10 +1,7 @@
-<<<<<<< HEAD:inst/templates/gitignore.txt
-=======
 # Project folders
 data
-temp
+scratch
 
->>>>>>> e66ae9d1a40fe49c2e3ec34a35d9aa428ffb8db7:inst/templates/gitignore_template.txt
 # Mac files
 .DS_Store
 
