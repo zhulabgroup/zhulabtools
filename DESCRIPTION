@@ -2,15 +2,15 @@ Package: zhulabtools
 Title: Tools for Zhu Lab at UMich
 Version: 1.1.0
 Authors@R: 
-    person("Kai", "Zhu", , "zhukai@umich.edu", role = c("aut", "cre"))
-Description: A collection of tools for managing projects and data in the Zhu Lab at the University of Michigan.
+    person("Kai", "Zhu", email = "zhukai@umich.edu", role = c("aut", "cre"))
+Description: Provides utility functions for managing projects, files, and data workflows in the Zhu Lab at the University of Michigan.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: R (>= 4.1.0)
-Imports:
+Imports: 
     fs,
     here,
     purrr,
