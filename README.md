@@ -13,5 +13,5 @@ install.packages("devtools")
 ```
 3. Install *zhulabtools* with
 ```R
-devtools::install_github("zhulabgroup/zhulabtools@r")
+devtools::install_github("zhulabgroup/zhulabtools")
 ```
