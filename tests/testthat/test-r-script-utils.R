@@ -1,13 +1,44 @@
-test_that("concat_scripts_in_dir concatenates script files", {
-  tmpdir <- tempdir()
-  tf1 <- file.path(tmpdir, "test1.R")
-  tf2 <- file.path(tmpdir, "test2.qmd")
-  writeLines("x <- 1", tf1)
-  writeLines("y: 2", tf2)
-  expect_output(concat_scripts_in_dir(tmpdir), "test1.R")
-  expect_output(concat_scripts_in_dir(tmpdir), "test2.qmd")
-  # Test output_file argument:
-  out <- file.path(tmpdir, "out.md")
-  expect_invisible(concat_scripts_in_dir(tmpdir, output_file = out))
-  expect_true(file.exists(out))
+testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with correct formatting", {
+  
+  # Setup: create a temporary directory and three example files
+  tmp_dir <- tempdir()
+  file_r <- file.path(tmp_dir, "sample1.R")
+  file_rmd <- file.path(tmp_dir, "sample2.Rmd")
+  file_qmd <- file.path(tmp_dir, "sample3.qmd")
+  
+  # Write simple test content
+  writeLines(c("# Sample R code", "x <- 123"), file_r)
+  writeLines(c("---", "title: Example", "---", "```{r}", "y <- 456", "```"), file_rmd)
+  writeLines(c("```{r}", "z <- 789", "```"), file_qmd)
+  
+  # 1. Run the function, capturing the output
+  out <- concat_scripts(
+    files = c(file_r, file_rmd, file_qmd),
+    output_file = NULL
+  )
+  
+  # 2. Check content and fences for each file
+  testthat::expect_true(any(grepl("# \\[sample1.R\\]", out)))
+  testthat::expect_true(any(grepl("```r", out)))
+  testthat::expect_true(any(grepl("# \\[sample2.Rmd\\]", out)))
+  testthat::expect_true(any(grepl("```\\{r\\}", out)))
+  testthat::expect_true(any(grepl("# \\[sample3.qmd\\]", out)))
+  testthat::expect_true(any(grepl("```qmd", out)))
+  
+  # 3. Check all script text included
+  expect_true(any(grepl("x <- 123", out)))
+  expect_true(any(grepl("y <- 456", out)))
+  expect_true(any(grepl("z <- 789", out)))
+  
+  # 4. Test writing output to a file
+  outfile <- tempfile(fileext = ".md")
+  result <- concat_scripts(files = c(file_r, file_rmd, file_qmd), output_file = outfile)
+  expect_true(file.exists(outfile))
+  file_text <- readLines(outfile)
+  expect_true(any(grepl("x <- 123", file_text)))
+  expect_true(any(grepl("^# \\[sample1.R\\]", file_text)))
+  
+  # Cleanup
+  unlink(c(file_r, file_rmd, file_qmd, outfile))
+  
 })
