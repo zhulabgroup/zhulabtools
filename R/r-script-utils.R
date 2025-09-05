@@ -1,63 +1,85 @@
-#' Concatenate R and Quarto Scripts in a Directory
+#' Concatenate R, R Markdown, and Quarto Scripts
 #'
-#' This function concatenates the contents of all `.R` and `.qmd` files in a specified directory,
-#' printing each with its filename as a header and wrapping the code in the appropriate code fence (such as `r` or `qmd`).
-#' Optionally, it writes all combined text to an output file (e.g., Markdown or text file).
+#' Concatenate the contents of all `.R`, `.Rmd`, or `.qmd` files, either from a specified list of files
+#' or by searching a directory. Each script is preceded by a header with its filename and wrapped in
+#' an appropriate code fence for use in Markdown documents. The result can be printed to the console
+#' or written to an output file.
 #'
-#' @param dir Character. Directory to search for scripts. Default is current directory (`"."`).
-#' @param pattern Regular expression for file types to include. Default: `"\\.(R|qmd)$"` (case-insensitive).
-#' @param output_file Character or `NULL`. If a filename is provided, the combined script text is written to that file.
-#'   If `NULL` (default), all content is printed to the console.
-#' @param charset Character. Text encoding to use when reading scripts. Default is `"UTF-8"`.
-#'
-#' @return Invisibly returns a character vector of the combined, formatted script text.
+#' @param files Optional character vector of file paths to concatenate. If `NULL` (default), the function
+#'   will search \code{dir} for files matching \code{pattern}.
+#' @param dir Character. Directory in which to search for files. Used only if \code{files} is \code{NULL}.
+#'   Defaults to the current working directory.
+#' @param pattern Character. Regular expression specifying the file types to include. By default,
+#'   matches all files ending with `.R`, `.Rmd`, or `.qmd` (case-insensitive).
+#' @param output_file Optional character string specifying a file to which results should be written.
+#'   If \code{NULL} (default), output is printed to the console.
+#' @param charset Character. The text encoding to use when reading files. Default is `"UTF-8"`.
+#' @return (Invisibly) a character vector containing the concatenated, annotated script text.
 #' @examples
 #' \dontrun{
-#' # Print all R and qmd files in current directory to console
-#' concat_scripts_in_dir()
+#' # Concatenate all .R, .Rmd, and .qmd files in the current directory and print result
+#' concat_scripts()
 #'
-#' # Write all scripts from "analysis" folder to an output markdown file
-#' concat_scripts_in_dir(dir = "analysis", output_file = "all_scripts.md")
+#' # Specify a directory
+#' concat_scripts(dir = "scripts")
+#'
+#' # Pipe in a custom file list
+#' myfiles <- list.files("R", pattern = "\\.(R|Rmd|qmd)$", ignore.case = TRUE, full.names = TRUE)
+#' concat_scripts(files = myfiles)
+#'
+#' # Write concatenation to a markdown file
+#' concat_scripts(dir = "vignettes", output_file = "all_code.md")
 #' }
-#' @importFrom fs dir_ls path_file
-#' @importFrom purrr map_chr
-#' @importFrom readr read_lines write_lines locale
-#' @importFrom tools file_ext
 #' @export
-concat_scripts_in_dir <- function(dir = ".",
-                                  pattern = "\\.(R|qmd)$",
-                                  output_file = NULL,
-                                  charset = "UTF-8") {
-  # Check required packages
-  for (pkg in c("fs", "readr", "purrr")) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      stop("Package '", pkg, "' is required. Please install it.", call. = FALSE)
-    }
+concat_scripts <- function(
+    files = NULL,
+    dir = ".",
+    pattern = "\\.(R|Rmd|qmd)$",
+    output_file = NULL,
+    charset = "UTF-8"
+) {
+  # Helper: Extracts and lowercases the file extension
+  get_file_ext <- function(filename) {
+    fname <- basename(filename)
+    ext <- sub(".*\\.", "", fname)
+    ifelse(grepl("\\.", fname), tolower(ext), "")
   }
-
-  # List matching files (case-insensitive)
-  files <- fs::dir_ls(path = dir, regexp = pattern, recurse = FALSE, type = "file", ignore.case = TRUE)
-
+  
+  # Step 1: Get list of files if files not provided
+  if (is.null(files)) {
+    files <- list.files(
+      path = dir,
+      pattern = pattern,
+      full.names = TRUE,
+      ignore.case = TRUE
+    )
+  }
+  
+  # Step 2: If no files found, exit gracefully
   if (length(files) == 0) {
-    message("No '.R' or '.qmd' files found in directory: ", dir)
+    message("No matching script files found to concatenate.")
     return(invisible(character()))
   }
-
-  cat_file_with_header <- function(file) {
-    fname <- fs::path_file(file)
-    ext <- tolower(tools::file_ext(fname))
+  
+  # Step 3: Function to read and annotate a single file
+  process_file <- function(file) {
+    fname <- basename(file)
+    ext <- get_file_ext(fname)
+    # Set the appropriate code fence for markdown output
     fence <- switch(ext,
-      "r" = "```r",
-      "qmd" = "```qmd",
-      "```"
-    )
+                    "r" = "```r",
+                    "rmd" = "```{r}",
+                    "qmd" = "```qmd",
+                    "```") # Fallback generic fence
+    # Read the file content according to the specified charset
     content <- tryCatch(
-      readr::read_lines(file, locale = readr::locale(encoding = charset)),
+      readLines(file, encoding = charset, warn = FALSE),
       error = function(e) {
         warning("Failed to read ", fname, ": ", conditionMessage(e))
-        return(character(0))
+        character(0)
       }
     )
+    # Compose markdown section for this file
     paste0(
       "\n# [", fname, "]\n",
       fence, "\n",
@@ -65,15 +87,16 @@ concat_scripts_in_dir <- function(dir = ".",
       "\n```\n"
     )
   }
-
-  all_text <- purrr::map_chr(files, cat_file_with_header)
-
+  
+  # Step 4: Process all files and collect output
+  all_text <- vapply(files, process_file, FUN.VALUE = character(1), USE.NAMES = FALSE)
+  
+  # Step 5: Output the result to console or file
   if (is.null(output_file)) {
     cat(all_text, sep = "\n")
   } else {
-    readr::write_lines(all_text, output_file)
+    writeLines(all_text, output_file, useBytes = TRUE)
     message("Wrote concatenated scripts to: ", output_file)
   }
-
   invisible(all_text)
 }
