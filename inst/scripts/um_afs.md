@@ -72,3 +72,11 @@ ssh uniqname@sftp.itd.umich.edu
 | scp            | Each time you run scp  | No               | Single file or directory upload         |
 | sftp session   | Once, at session start | Yes              | Multiple file/folder upload in session  |
 | ssh            | Each time you connect  | Not applicable   | Remote access, file management only     |
+
+## References
+
+- [AFS Support](https://its.umich.edu/computing/backup-storage/afs/support)
+- [AFS Overview](https://documentation.its.umich.edu/node/234)
+- [AFS Personal and AFS Group Websites](https://documentation.its.umich.edu/node/4143)
+- [Managing Who Can Visit AFS Personal/AFS Group Webpages](https://documentation.its.umich.edu/node/4137)
+- [Managing Access to AFS Group Directories for Websites](https://teamdynamix.umich.edu/TDClient/30/Portal/KB/ArticleDet?ID=7243)
