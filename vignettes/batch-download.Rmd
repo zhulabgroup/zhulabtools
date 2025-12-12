@@ -1,0 +1,97 @@
+---
+title: "Batch file downloading with wget on U-M Linux systems"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Batch download with wget}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+This vignette explains how to batch-download files using the `wget` command line tool on the U-M cluster or any Linux system, using a list of URLs and capturing the download progress in a log file. 
+
+## Prerequisites
+
+- A Linux environment with `wget` installed (most clusters and VMs have this by default).
+- A plain text file with URLs, e.g. `urls.txt`.
+- Basic familiarity with the file system and running terminal commands.
+
+## Step 1: Create a file with download URLs
+
+Prepare a text file listing one URL per line to download. Name it something meaningful, like `urls.txt`:
+
+```text
+https://example.com/file1.zip
+https://example.com/file2.zip
+https://example.com/file3.zip
+...
+```
+
+Place this file in your working directory.
+
+## Step 2: Set up your download options
+
+You can configure three main options:
+
+- `URL_FILE`: The name of your text file listing URLs.
+- `LOG_FILE`: Where to save the download log (optional).
+- `DEST_DIR`: Destination directory for your downloaded files.
+
+Default values are:
+
+- `URL_FILE="urls.txt"`
+- `LOG_FILE="download_log.txt"`
+- `DEST_DIR="../"`
+
+## Step 3: Batch download files with wget
+
+Copy and paste the following command in your terminal, customizing as needed:
+
+```bash
+wget --no-host-directories --input-file="urls.txt" -nc -v -P ../ >> download_log.txt 2>&1 &
+```
+
+**How it works:**
+
+- `--no-host-directories`: Prevents creation of subdirectories for each host.
+- `--input-file`: Specifies your URL list file.
+- `-nc`: No clobber; skips files already downloaded.
+- `-v`: Verbose; shows detailed output.
+- `-P ../`: Puts downloads in the parent directory; change as needed.
+- `>> download_log.txt 2>&1 &`: Writes logs and runs the command in the background.
+
+## Step 4: Check download progress
+
+Monitor job status and download log:
+
+```bash
+tail -f download_log.txt
+```
+
+## Step 5: Troubleshooting
+
+- **URL file not found:**  
+  ```
+  URL file not found: urls.txt
+  ```
+  - Double-check spelling and location of your URL file.
+
+- **wget not installed:**  
+  - Run `which wget` to check; ask your administrator to install if missing.
+
+- **Incomplete downloads:**  
+  - Review `download_log.txt` for errors or failed URLs.
+  - Rerun the wget command as needed; files already downloaded will be skipped.
+
+## Best practices & tips
+
+- Name your log and URL files clearly.
+- Inspect the log for any failed downloads.
+- Download to a subdirectory if managing many files.
+- For large jobs, check quotas or storage limits.
+
+## References
+
+- [GNU wget documentation](https://www.gnu.org/software/wget/manual/wget.html)
+- [U-M ARC Linux Help](https://arc.umich.edu/linux/)
