@@ -2,7 +2,7 @@
 title: "Upload files to your U-M AFS web space"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Upload files to your U-M AFS web space}
+  %\VignetteIndexEntry{Upload files to AFS web space}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
