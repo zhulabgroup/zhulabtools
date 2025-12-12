@@ -1,10 +1,25 @@
-# Upload files to your U-M AFS web space
+---
+title: "Upload files to your U-M AFS web space"
+format:
+  html:
+    highlight-style: github
+knitr:
+  opts_chunk:
+    collapse: false
+    comment: "#>"
+    fig-align: "center"
+    echo: false
+vignette: >
+  %\VignetteIndexEntry{Upload files to your U-M AFS web space}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
 
-Upload files and folders to your U-M personal web directory (`~/Public/html/`) using `scp` or `sftp`, or use `ssh` for remote command-line access. Duo two-factor authentication (**Duo**) is required for every new connection.
+Upload files and folders to your U-M personal web directory (`~/Public/html/`) using `scp` or `sftp`, or use `ssh` for remote command-line access. *Duo two-factor authentication* (**Duo**) is required for every new connection.
 
 ## Find your web hosting address
 
-After uploading your files or folders to `Public/html/project`, they will be publicly available at:
+After uploading your files/folders to `Public/html/project`, they will be publicly available at:
 
 ```
 https://websites.umich.edu/~uniqname/project
@@ -14,31 +29,34 @@ Replace `uniqname` with your U-M username, and `project` with your folder or fil
 
 ## Quick tips
 
-- **Every method triggers Duo each time you connect.**  
+- **Every method triggers Duo each time you connect.**
 - Use `scp` for quick, one-off uploads (each `scp` command requires Duo).
 - Use `sftp` to batch upload multiple files or folders in a single session (one Duo approval).
-- Use `ssh` for remote command-line access; you cannot upload or download files with `ssh` alone.
+- Use `ssh` for remote command-line access; *you cannot upload or download files with ssh alone*.
 
 ## Check prerequisites
 
 - U-M uniqname and AFS access
-- SSH tools installed:  
+- SSH tools installed:
    - Mac/Linux: included by default  
    - Windows: use [Git Bash](https://gitforwindows.org/) or GUI SFTP clients ([WinSCP](https://winscp.net/), [FileZilla](https://filezilla-project.org/))
 
 ## Upload files using scp (for single files or folders)
 
 To upload a file:
+
 ```sh
 scp /path/to/local/file.html uniqname@sftp.itd.umich.edu:~/Public/html/
 ```
-- **Duo will be triggered:** You'll get a Duo push after running this command.
+
+*Duo will be triggered: You'll get a Duo push after running this command.*
 
 To upload a directory:
+
 ```sh
 scp -r /path/to/local/vignette uniqname@sftp.itd.umich.edu:~/Public/html/project
 ```
-- **Duo will be triggered:** You'll get a Duo push after running this command.
+*Duo will be triggered: You'll get a Duo push after running this command.*
 
 ## Upload files using sftp (batch uploads in an interactive session)
 
@@ -51,19 +69,23 @@ put -r /path/to/local/vignette       # upload a folder
 put /path/to/local/file.html         # upload a file
 bye                                  # exit
 ```
-- **Duo is only triggered once per session:** You can upload multiple files/folders after a single Duo approval.
+
+*Duo is only triggered once per session: You can upload multiple files/folders after a single Duo approval.*
 
 ## Access your files using ssh (remote command-line only)
 
 To connect to your account:
-```sh
+
+```bash
 ssh uniqname@sftp.itd.umich.edu
 ```
-- **Duo will be triggered:** You'll get a Duo push after running this command.
+
+*Duo will be triggered: You'll get a Duo push after running this command.*
 
 **Note:**  
+
 - `ssh` opens a remote terminal on the server for file management (view, move, or delete files).
-- You **cannot upload or download files with only `ssh`**. Use `scp` or `sftp` for transferring files.
+- You **cannot upload or download files with only ssh**.
 
 ## Method comparison
 
