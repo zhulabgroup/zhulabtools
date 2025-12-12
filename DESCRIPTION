@@ -19,8 +19,7 @@ Imports:
     utils
 Suggests: 
     knitr,
-    quarto,
     roxygen2,
     testthat
 VignetteBuilder:
-    quarto
+    knitr
