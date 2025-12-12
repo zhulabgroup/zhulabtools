@@ -1,0 +1,93 @@
+---
+title: "Archiving data with Slurm on U-M Turbo & Data Den"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Archiving data with Slurm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+This workflow helps you:
+
+- Archive a folder in `/nfs/turbo/seas-zhukai/archives/` on the U-M cluster.
+- Submit the archiving process as a Slurm job.
+- Transfer the resulting files to Data Den.
+- Clean up files when done.
+
+## Prerequisites
+
+- Access to the U-M Turbo storage and cluster (Slurm).
+- Your data folder placed in `/nfs/turbo/seas-zhukai/archives/`.
+- Basic knowledge of Slurm job submission commands.
+
+## Step 1: Prepare your data
+
+1. Move or copy your target folder to `/nfs/turbo/seas-zhukai/archives/`.
+2. Make sure your folder name has no spaces or special characters.
+
+## Step 2: Submit the archiving job
+
+Submit an archiving task using Slurm.  
+**Copy, paste, and edit the lines below for your job:**
+
+```bash
+sbatch --export=TARGET_FOLDER='your_folder',UNIQUE_NAME='unique_id' --job-name='archive_job' --nodes=1 --ntasks-per-node=1 --cpus-per-task=1 --mem-per-cpu=8G --time=24:00:00 --account=zhukai0 --partition=standard --mail-type=BEGIN,END --mail-user=your_email@umich.edu --wrap "
+  cd /nfs/turbo/seas-zhukai/archives/\${TARGET_FOLDER} || { echo 'Error: Target folder not found.'; exit 1; }
+  module load archivetar || { echo 'Error: archivetar module not available.'; exit 1; }
+  archivetar --prefix \${TARGET_FOLDER} --zstd --bundle-path /scratch/zhukai_root/zhukai0/\${UNIQUE_NAME} --size 100G || { echo 'Archiving failed.'; exit 1; }
+  echo 'Archiving completed successfully.'
+"
+```
+
+**Key parameters:**
+
+- `TARGET_FOLDER`: The folder you want to archive (must exist in `/nfs/turbo/seas-zhukai/archives/`)
+- `UNIQUE_NAME`: Unique identifier for this bundle/job (no spaces/special chars)
+- `--wrap`: Runs shell commands directly, so no separate script file is needed
+- `--mail-user`: Enter your U-M email to receive job status notifications
+
+## Step 3: Monitor job status
+
+- Slurm will notify you by email at beginning and completion (if you set `--mail-user`).
+- Check job progress with:
+  ```bash
+  squeue -u youruniqname
+  ```
+- Examine output/error logs in your home directory (or set `--output`, `--error` yourself for custom locations).
+
+## Step 4: Copy results to Data Den
+
+After archiving concludes, **transfer the tar files** from `/scratch/zhukai_root/zhukai0/UNIQUE_NAME` to Data Den using Globus:
+
+- See [Globus documentation](https://docs.globus.org/)
+- Verify files before deleting originals.
+
+## Step 5: Clean up
+
+Delete files from Turbo and Scratch *after* confirming successful data transfer to Data Den.
+
+```bash
+rm -r /nfs/turbo/seas-zhukai/archives/your_folder
+rm -r /scratch/zhukai_root/zhukai0/unique_id
+```
+
+## Best practices & tips
+
+- Use descriptive names for jobs and bundles.
+- Monitor disk quotas before and after transfer.
+- Don’t delete original data before verifying transfer.
+- Update your email in the job submission string for status updates.
+
+## Troubleshooting
+
+- **“Target folder not found” error:** Double-check folder location and spelling.
+- **No notification emails:** Make sure `--mail-user` is set to your valid email.
+- **Archiving not working:** Check that the `archivetar` module loads successfully.
+
+## References
+
+- [U-M ARC Slurm Documentation](https://arc.umich.edu/slurm-intro/)
+- [Turbo High Capacity Storage](https://arc.umich.edu/turbo-high-capacity-storage/)
+- [GlobUS Documentation](https://docs.globus.org/)
