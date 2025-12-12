@@ -1,17 +1,9 @@
 ---
 title: "Upload files to your U-M AFS web space"
-format:
-  html:
-    highlight-style: github
-knitr:
-  opts_chunk:
-    collapse: false
-    comment: "#>"
-    fig-align: "center"
-    echo: false
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Upload files to your U-M AFS web space}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
