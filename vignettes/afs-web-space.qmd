@@ -76,7 +76,7 @@ bye                                  # exit
 
 To connect to your account:
 
-```bash
+```sh
 ssh uniqname@sftp.itd.umich.edu
 ```
 
