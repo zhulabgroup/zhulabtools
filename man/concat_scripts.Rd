@@ -9,7 +9,8 @@ concat_scripts(
   dir = ".",
   pattern = "\\\\.(R|Rmd|qmd)$",
   output_file = NULL,
-  charset = "UTF-8"
+  charset = "UTF-8",
+  recursive = TRUE
 )
 }
 \arguments{
@@ -26,23 +27,25 @@ matches all files ending with \code{.R}, \code{.Rmd}, or \code{.qmd} (case-insen
 If \code{NULL} (default), output is printed to the console.}
 
 \item{charset}{Character. The text encoding to use when reading files. Default is \code{"UTF-8"}.}
+
+\item{recursive}{Logical. Should the file search be recursive? Default is \code{TRUE}.}
 }
 \value{
 (Invisibly) a character vector containing the concatenated, annotated script text.
 }
 \description{
 Concatenate the contents of all \code{.R}, \code{.Rmd}, or \code{.qmd} files, either from a specified list of files
-or by searching a directory. Each script is preceded by a header with its filename and wrapped in
-an appropriate code fence for use in Markdown documents. The result can be printed to the console
+or by searching a directory. Each script is preceded by a header with its relative filename (from the current working directory)
+and wrapped in an appropriate code fence for use in Markdown documents. The result can be printed to the console
 or written to an output file.
 }
 \examples{
 \dontrun{
-# Concatenate all .R, .Rmd, and .qmd files in the current directory and print result
+# Concatenate all .R, .Rmd, and .qmd files recursively in the current directory and print result
 concat_scripts()
 
-# Specify a directory
-concat_scripts(dir = "scripts")
+# Specify a directory, non-recursively
+concat_scripts(dir = "scripts", recursive = FALSE)
 
 # Pipe in a custom file list
 myfiles <- list.files("R", pattern = "\\\\.(R|Rmd|qmd)$", ignore.case = TRUE, full.names = TRUE)
