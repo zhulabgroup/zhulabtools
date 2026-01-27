@@ -33,12 +33,12 @@
 #' }
 #' @export
 concat_scripts <- function(
-    files = NULL,
-    dir = ".",
-    pattern = "\\.(R|Rmd|qmd)$",
-    output_file = NULL,
-    charset = "UTF-8",
-    recursive = TRUE
+  files = NULL,
+  dir = ".",
+  pattern = "\\.(R|Rmd|qmd)$",
+  output_file = NULL,
+  charset = "UTF-8",
+  recursive = TRUE
 ) {
   # Helper: Extracts and lowercases the file extension
   get_file_ext <- function(filename) {
@@ -46,7 +46,7 @@ concat_scripts <- function(
     ext <- sub(".*\\.", "", fname)
     ifelse(grepl("\\.", fname), tolower(ext), "")
   }
-  
+
   # Helper: Get relative path from current working directory
   rel_path <- function(path) {
     wd <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
@@ -57,7 +57,7 @@ concat_scripts <- function(
       abs # Use absolute path if file is not under working directory
     }
   }
-  
+
   # Step 1: Get list of files if files not provided
   if (is.null(files)) {
     files <- list.files(
@@ -68,23 +68,24 @@ concat_scripts <- function(
       recursive = recursive
     )
   }
-  
+
   # Step 2: If no files found, exit gracefully
   if (length(files) == 0) {
     message("No matching script files found to concatenate.")
     return(invisible(character()))
   }
-  
+
   # Step 3: Function to read and annotate a single file
   process_file <- function(file) {
     fname <- rel_path(file) # changed from basename(file)
     ext <- get_file_ext(fname)
     # Set the appropriate code fence for markdown output
     fence <- switch(ext,
-                    "r" = "```r",
-                    "rmd" = "```{r}",
-                    "qmd" = "```qmd",
-                    "```") # Fallback generic fence
+      "r" = "```r",
+      "rmd" = "```{r}",
+      "qmd" = "```qmd",
+      "```"
+    ) # Fallback generic fence
     # Read the file content according to the specified charset
     content <- tryCatch(
       readLines(file, encoding = charset, warn = FALSE),
@@ -101,10 +102,10 @@ concat_scripts <- function(
       "\n```\n"
     )
   }
-  
+
   # Step 4: Process all files and collect output
   all_text <- vapply(files, process_file, FUN.VALUE = character(1), USE.NAMES = FALSE)
-  
+
   # Step 5: Output the result to console or file
   if (is.null(output_file)) {
     cat(all_text, sep = "\n")
