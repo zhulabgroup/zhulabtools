@@ -58,37 +58,9 @@ concat_scripts <- function(
     return(invisible(character()))
   }
 
-  # Step 3: Function to read and annotate a single file
-  process_file <- function(file) {
-    fname <- rel_path(file) # changed from basename(file)
-    ext <- get_file_ext(fname)
-    # Set the appropriate code fence for markdown output
-    fence <- switch(ext,
-      "r" = "```r",
-      "rmd" = "```{r}",
-      "qmd" = "```qmd",
-      "```"
-    ) # Fallback generic fence
-    # Read the file content according to the specified charset
-    content <- tryCatch(
-      readLines(file, encoding = charset, warn = FALSE),
-      error = function(e) {
-        warning("Failed to read ", fname, ": ", conditionMessage(e))
-        character(0)
-      }
-    )
-    # Compose markdown section for this file
-    paste0(
-      "\n# [", fname, "]\n",
-      fence, "\n",
-      paste(content, collapse = "\n"),
-      "\n```\n"
-    )
-  }
-
   # Step 4: Process all files and collect output
-  all_text <- vapply(files, process_file, FUN.VALUE = character(1), USE.NAMES = FALSE)
-
+  all_text <- vapply(files, process_file, charset = charset, FUN.VALUE = character(1), USE.NAMES = FALSE)
+  
   # Step 5: Output the result to console or file
   if (is.null(output_file)) {
     cat(all_text, sep = "\n")
@@ -152,4 +124,29 @@ rel_path <- function(path) {
   } else {
     abs # Use absolute path if file is not under working directory
   }
+}
+
+# Helper: Process a single file and return annotated text (unexported)
+process_file <- function(file, charset) {
+  fname <- rel_path(file)
+  ext <- get_file_ext(fname)
+  fence <- switch(ext,
+                  "r" = "```r",
+                  "rmd" = "```{r}",
+                  "qmd" = "```qmd",
+                  "```"
+  )
+  content <- tryCatch(
+    readLines(file, encoding = charset, warn = FALSE),
+    error = function(e) {
+      warning("Failed to read ", fname, ": ", conditionMessage(e))
+      character(0)
+    }
+  )
+  paste0(
+    "\n# [", fname, "]\n",
+    fence, "\n",
+    paste(content, collapse = "\n"),
+    "\n```\n"
+  )
 }
