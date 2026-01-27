@@ -41,24 +41,6 @@ concat_scripts <- function(
   recursive = TRUE,
   clipboard = TRUE
 ) {
-  # Helper: Extracts and lowercases the file extension
-  get_file_ext <- function(filename) {
-    fname <- basename(filename)
-    ext <- sub(".*\\.", "", fname)
-    ifelse(grepl("\\.", fname), tolower(ext), "")
-  }
-
-  # Helper: Get relative path from current working directory
-  rel_path <- function(path) {
-    wd <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
-    abs <- normalizePath(path, winslash = "/", mustWork = FALSE)
-    if (startsWith(abs, paste0(wd, "/"))) {
-      substring(abs, nchar(wd) + 2)
-    } else {
-      abs # Use absolute path if file is not under working directory
-    }
-  }
-
   # Step 1: Get list of files if files not provided
   if (is.null(files)) {
     files <- list.files(
@@ -125,7 +107,7 @@ concat_scripts <- function(
   invisible(all_text)
 }
 
-# Helper function: copy to clipboard (unexported)
+# Helper: Copy to clipboard (unexported)
 copy_to_clipboard <- function(txt) {
   sysname <- Sys.info()[["sysname"]]
   if (sysname == "Windows") {
@@ -151,5 +133,23 @@ copy_to_clipboard <- function(txt) {
       warning("No clipboard utility (xclip/xsel) found. Text not copied.")
       return(invisible(FALSE))
     }
+  }
+}
+
+# Helper: Extracts and lowercases the file extension (unexported)
+get_file_ext <- function(filename) {
+  fname <- basename(filename)
+  ext <- sub(".*\\.", "", fname)
+  ifelse(grepl("\\.", fname), tolower(ext), "")
+}
+
+# Helper: Get relative path from current working directory (unexported)
+rel_path <- function(path) {
+  wd <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
+  abs <- normalizePath(path, winslash = "/", mustWork = FALSE)
+  if (startsWith(abs, paste0(wd, "/"))) {
+    substring(abs, nchar(wd) + 2)
+  } else {
+    abs # Use absolute path if file is not under working directory
   }
 }
