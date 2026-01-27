@@ -1,6 +1,6 @@
 Package: zhulabtools
 Title: Tools for Zhu Lab at UMich
-Version: 1.6.0
+Version: 1.7.0
 Authors@R: c(
     person("Kai", "Zhu", role = c("aut", "cre"), email = "zhukai@umich.edu", comment = c(ORCID = "0000-0003-1587-3317")),
     person("Yiluan", "Song", role = "ctb", comment = c(ORCID = "0000-0003-3660-3797")),
