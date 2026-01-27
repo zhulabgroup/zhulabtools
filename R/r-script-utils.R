@@ -14,14 +14,15 @@
 #' @param output_file Optional character string specifying a file to which results should be written.
 #'   If \code{NULL} (default), output is printed to the console.
 #' @param charset Character. The text encoding to use when reading files. Default is `"UTF-8"`.
+#' @param recursive Logical. Should the file search be recursive? Default is `TRUE`.
 #' @return (Invisibly) a character vector containing the concatenated, annotated script text.
 #' @examples
 #' \dontrun{
-#' # Concatenate all .R, .Rmd, and .qmd files in the current directory and print result
+#' # Concatenate all .R, .Rmd, and .qmd files recursively in the current directory and print result
 #' concat_scripts()
 #'
-#' # Specify a directory
-#' concat_scripts(dir = "scripts")
+#' # Specify a directory, non-recursively
+#' concat_scripts(dir = "scripts", recursive = FALSE)
 #'
 #' # Pipe in a custom file list
 #' myfiles <- list.files("R", pattern = "\\.(R|Rmd|qmd)$", ignore.case = TRUE, full.names = TRUE)
@@ -36,7 +37,8 @@ concat_scripts <- function(
     dir = ".",
     pattern = "\\.(R|Rmd|qmd)$",
     output_file = NULL,
-    charset = "UTF-8"
+    charset = "UTF-8",
+    recursive = TRUE
 ) {
   # Helper: Extracts and lowercases the file extension
   get_file_ext <- function(filename) {
@@ -51,7 +53,8 @@ concat_scripts <- function(
       path = dir,
       pattern = pattern,
       full.names = TRUE,
-      ignore.case = TRUE
+      ignore.case = TRUE,
+      recursive = recursive
     )
   }
   
