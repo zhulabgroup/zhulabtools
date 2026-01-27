@@ -10,7 +10,8 @@ concat_scripts(
   pattern = "\\\\.(R|Rmd|qmd)$",
   output_file = NULL,
   charset = "UTF-8",
-  recursive = TRUE
+  recursive = TRUE,
+  clipboard = TRUE
 )
 }
 \arguments{

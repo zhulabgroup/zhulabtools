@@ -38,7 +38,8 @@ concat_scripts <- function(
   pattern = "\\.(R|Rmd|qmd)$",
   output_file = NULL,
   charset = "UTF-8",
-  recursive = TRUE
+  recursive = TRUE,
+  clipboard = TRUE
 ) {
   # Helper: Extracts and lowercases the file extension
   get_file_ext <- function(filename) {
@@ -113,5 +114,42 @@ concat_scripts <- function(
     writeLines(all_text, output_file, useBytes = TRUE)
     message("Wrote concatenated scripts to: ", output_file)
   }
+
+  # Step 6: Copy to clipboard if requested
+  if (clipboard) {
+    txt <- paste(all_text, collapse = "\n")
+    copy_to_clipboard(txt)
+    message("Output copied to clipboard!")
+  }
+
   invisible(all_text)
+}
+
+# Helper function: copy to clipboard (unexported)
+copy_to_clipboard <- function(txt) {
+  sysname <- Sys.info()[["sysname"]]
+  if (sysname == "Windows") {
+    writeClipboard(txt)
+    return(invisible(TRUE))
+  } else if (sysname == "Darwin") {
+    con <- pipe("pbcopy", "w")
+    writeLines(txt, con)
+    close(con)
+    return(invisible(TRUE))
+  } else {
+    if (nzchar(Sys.which("xclip"))) {
+      con <- pipe("xclip -selection clipboard", "w")
+      writeLines(txt, con)
+      close(con)
+      return(invisible(TRUE))
+    } else if (nzchar(Sys.which("xsel"))) {
+      con <- pipe("xsel --clipboard --input", "w")
+      writeLines(txt, con)
+      close(con)
+      return(invisible(TRUE))
+    } else {
+      warning("No clipboard utility (xclip/xsel) found. Text not copied.")
+      return(invisible(FALSE))
+    }
+  }
 }
