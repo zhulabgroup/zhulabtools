@@ -1,5 +1,4 @@
-testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with correct formatting", {
-  
+testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with correct formatting and relative paths", {
   # Setup: create a temporary directory and three example files
   tmp_dir <- tempdir()
   file_r <- file.path(tmp_dir, "sample1.R")
@@ -17,13 +16,13 @@ testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with co
     output_file = NULL
   )
   
-  # 2. Check content and fences for each file
-  testthat::expect_true(any(grepl("# \\[sample1.R\\]", out)))
-  testthat::expect_true(any(grepl("```r", out)))
-  testthat::expect_true(any(grepl("# \\[sample2.Rmd\\]", out)))
-  testthat::expect_true(any(grepl("```\\{r\\}", out)))
-  testthat::expect_true(any(grepl("# \\[sample3.qmd\\]", out)))
-  testthat::expect_true(any(grepl("```qmd", out)))
+  # -- Updated checks: Header includes relative path containing the filename
+  expect_true(any(grepl(paste0("# \\[.*", basename(file_r), "\\]"), out)))
+  expect_true(any(grepl("```r", out)))
+  expect_true(any(grepl(paste0("# \\[.*", basename(file_rmd), "\\]"), out)))
+  expect_true(any(grepl("```\\{r\\}", out)))
+  expect_true(any(grepl(paste0("# \\[.*", basename(file_qmd), "\\]"), out)))
+  expect_true(any(grepl("```qmd", out)))
   
   # 3. Check all script text included
   expect_true(any(grepl("x <- 123", out)))
@@ -36,9 +35,8 @@ testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with co
   expect_true(file.exists(outfile))
   file_text <- readLines(outfile)
   expect_true(any(grepl("x <- 123", file_text)))
-  expect_true(any(grepl("^# \\[sample1.R\\]", file_text)))
+  expect_true(any(grepl(paste0("^# \\[.*", basename(file_r), "\\]"), file_text)))
   
   # Cleanup
   unlink(c(file_r, file_rmd, file_qmd, outfile))
-  
 })
