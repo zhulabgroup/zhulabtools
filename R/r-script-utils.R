@@ -26,13 +26,13 @@
 #' }
 #' @export
 concat_scripts <- function(
-    dir = ".",
-    files = NULL,
-    pattern = "\\.(R|Rmd|qmd)$",
-    recursive = TRUE,
-    clipboard = TRUE,
-    outfile = NULL,
-    charset = "UTF-8"
+  dir = ".",
+  files = NULL,
+  pattern = "\\.(R|Rmd|qmd)$",
+  recursive = TRUE,
+  clipboard = TRUE,
+  outfile = NULL,
+  charset = "UTF-8"
 ) {
   # If the user hasn't provided specific files, find all matching files in the directory.
   if (is.null(files)) {
@@ -44,17 +44,17 @@ concat_scripts <- function(
       recursive = recursive
     )
   }
-  
+
   # Graceful exit if no matching files were found.
   if (length(files) == 0) {
     message("No matching script files found to concatenate.")
     return(invisible(character()))
   }
-  
+
   # Read and concatenate contents, annotate each file for markdown output.
   all_text <- vapply(files, process_file, charset = charset, FUN.VALUE = character(1), USE.NAMES = FALSE)
   txt <- paste(all_text, collapse = "\n")
-  
+
   # Prefer clipboard output if requested, then file, then console.
   if (clipboard) {
     copy_to_clipboard(txt)
@@ -126,10 +126,10 @@ process_file <- function(file, charset) {
   fname <- get_rel_path(file)
   ext <- get_file_ext(fname)
   fence <- switch(ext,
-                  "r" = "```r",
-                  "rmd" = "```{r}",
-                  "qmd" = "```qmd",
-                  "```"
+    "r" = "```r",
+    "rmd" = "```{r}",
+    "qmd" = "```qmd",
+    "```"
   )
   content <- tryCatch(
     readLines(file, encoding = charset, warn = FALSE),
