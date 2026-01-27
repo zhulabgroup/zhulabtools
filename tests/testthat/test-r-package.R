@@ -11,7 +11,3 @@ test_that("check_install_packages installs if missing", {
 test_that("load_packages loads installed packages", {
   expect_message(load_packages("stats"), "Loading package 'stats'...")
 })
-
-test_that("update_packages announces update", {
-  expect_message(update_packages("stats"), "Updating package 'stats'")
-})

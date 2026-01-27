@@ -59,33 +59,3 @@ load_packages <- function(packages) {
     message(sprintf("Package '%s' has been loaded.", pkg))
   }
 }
-
-#' Update Specified Packages
-#'
-#' This function updates specified packages to their latest available versions
-#' on CRAN, along with their dependencies. It reports on the progress of each
-#' update to help users track the changes.
-#'
-#' @param packages A character vector of package names that should be updated.
-#' @return NULL. The function's primary role is to create side effects by
-#'   updating packages and notifying users about the process via messages.
-#' @examples
-#' \dontrun{
-#' update_packages(c("dplyr", "ggplot2"))
-#' }
-#' @seealso \code{\link{update.packages}}
-#' @importFrom utils update.packages
-#' @export
-update_packages <- function(packages) {
-  # Update each specified package including its dependencies
-  for (pkg in packages) {
-    message(sprintf("Updating package '%s' and its dependencies...", pkg))
-    update.packages(
-      lib.loc = .libPaths(),
-      oldPkgs = pkg,
-      ask = FALSE,
-      dependencies = TRUE
-    )
-    message(sprintf("Package '%s' has been updated.", pkg))
-  }
-}
