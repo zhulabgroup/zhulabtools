@@ -1,4 +1,4 @@
-testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with correct formatting and relative paths", {
+testthat::test_that("concat_code() concatenates R, Rmd, and qmd files with correct formatting and relative paths", {
   # Setup: create a temporary directory and three example files
   tmp_dir <- tempdir()
   file_r <- file.path(tmp_dir, "sample1.R")
@@ -11,7 +11,7 @@ testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with co
   writeLines(c("```{r}", "z <- 789", "```"), file_qmd)
 
   # Run the function with clipboard suppressed, capturing the output
-  out <- concat_scripts(
+  out <- concat_code(
     files = c(file_r, file_rmd, file_qmd),
     outfile = NULL,
     clipboard = FALSE
@@ -32,7 +32,7 @@ testthat::test_that("concat_scripts() concatenates R, Rmd, and qmd files with co
 
   # Test writing output to a file (again, suppress clipboard)
   outfile <- tempfile(fileext = ".md")
-  result <- concat_scripts(
+  result <- concat_code(
     files = c(file_r, file_rmd, file_qmd),
     outfile = outfile,
     clipboard = FALSE

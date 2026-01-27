@@ -18,14 +18,14 @@
 #' @return (Invisibly) a character vector containing the concatenated, annotated script text (invisibly).
 #' @examples
 #' \dontrun{
-#' concat_scripts()
-#' concat_scripts(dir = "scripts", recursive = FALSE)
+#' concat_code()
+#' concat_code(dir = "scripts", recursive = FALSE)
 #' myfiles <- list.files("R", pattern = "\\.(R|Rmd|qmd)$", full.names = TRUE)
-#' concat_scripts(files = myfiles)
-#' concat_scripts(dir = "vignettes", outfile = "all_code.md", clipboard = FALSE)
+#' concat_code(files = myfiles)
+#' concat_code(dir = "vignettes", outfile = "all_code.md", clipboard = FALSE)
 #' }
 #' @export
-concat_scripts <- function(
+concat_code <- function(
   dir = ".",
   files = NULL,
   pattern = "\\.(R|Rmd|qmd)$",
