@@ -116,7 +116,7 @@ get_file_ext <- function(filename) {
 }
 
 # Helper: Get relative path from current working directory (unexported)
-rel_path <- function(path) {
+get_rel_path <- function(path) {
   wd <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
   abs <- normalizePath(path, winslash = "/", mustWork = FALSE)
   if (startsWith(abs, paste0(wd, "/"))) {
@@ -128,7 +128,7 @@ rel_path <- function(path) {
 
 # Helper: Process a single file and return annotated text (unexported)
 process_file <- function(file, charset) {
-  fname <- rel_path(file)
+  fname <- get_rel_path(file)
   ext <- get_file_ext(fname)
   fence <- switch(ext,
                   "r" = "```r",
