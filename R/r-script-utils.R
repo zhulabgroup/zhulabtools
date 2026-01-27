@@ -1,8 +1,8 @@
 #' Concatenate R, R Markdown, and Quarto Scripts
 #'
 #' Concatenate the contents of all `.R`, `.Rmd`, or `.qmd` files, either from a specified list of files
-#' or by searching a directory. Each script is preceded by a header with its filename and wrapped in
-#' an appropriate code fence for use in Markdown documents. The result can be printed to the console
+#' or by searching a directory. Each script is preceded by a header with its relative filename (from the current working directory)
+#' and wrapped in an appropriate code fence for use in Markdown documents. The result can be printed to the console
 #' or written to an output file.
 #'
 #' @param files Optional character vector of file paths to concatenate. If `NULL` (default), the function
@@ -47,6 +47,17 @@ concat_scripts <- function(
     ifelse(grepl("\\.", fname), tolower(ext), "")
   }
   
+  # Helper: Get relative path from current working directory
+  rel_path <- function(path) {
+    wd <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
+    abs <- normalizePath(path, winslash = "/", mustWork = FALSE)
+    if (startsWith(abs, paste0(wd, "/"))) {
+      substring(abs, nchar(wd) + 2)
+    } else {
+      abs # Use absolute path if file is not under working directory
+    }
+  }
+  
   # Step 1: Get list of files if files not provided
   if (is.null(files)) {
     files <- list.files(
@@ -66,7 +77,7 @@ concat_scripts <- function(
   
   # Step 3: Function to read and annotate a single file
   process_file <- function(file) {
-    fname <- basename(file)
+    fname <- rel_path(file) # changed from basename(file)
     ext <- get_file_ext(fname)
     # Set the appropriate code fence for markdown output
     fence <- switch(ext,
