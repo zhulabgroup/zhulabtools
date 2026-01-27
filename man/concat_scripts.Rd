@@ -5,54 +5,49 @@
 \title{Concatenate R, R Markdown, and Quarto Scripts}
 \usage{
 concat_scripts(
-  files = NULL,
   dir = ".",
+  files = NULL,
   pattern = "\\\\.(R|Rmd|qmd)$",
-  output_file = NULL,
-  charset = "UTF-8",
   recursive = TRUE,
-  clipboard = TRUE
+  clipboard = TRUE,
+  outfile = NULL,
+  charset = "UTF-8"
 )
 }
 \arguments{
-\item{files}{Optional character vector of file paths to concatenate. If \code{NULL} (default), the function
-will search \code{dir} for files matching \code{pattern}.}
+\item{dir}{Character. Directory in which to search for files. Ignored if \code{files} is provided. Defaults to current working directory.}
 
-\item{dir}{Character. Directory in which to search for files. Used only if \code{files} is \code{NULL}.
-Defaults to the current working directory.}
+\item{files}{Optional character vector of file paths to concatenate. If \code{NULL} (default), the function will search \code{dir} for files matching \code{pattern}.}
 
-\item{pattern}{Character. Regular expression specifying the file types to include. By default,
-matches all files ending with \code{.R}, \code{.Rmd}, or \code{.qmd} (case-insensitive).}
+\item{pattern}{Character. Regular expression specifying the file types to include. By default, matches all files ending with \code{.R}, \code{.Rmd}, or \code{.qmd} (case-insensitive).}
 
-\item{output_file}{Optional character string specifying a file to which results should be written.
-If \code{NULL} (default), output is printed to the console.}
+\item{recursive}{Logical. Should the file search be recursive in \code{dir}? Default is \code{TRUE}.}
+
+\item{clipboard}{Logical. If \code{TRUE} (default), concatenated output is copied to the system clipboard (macOS/Windows/Linux supported) and no file or console output is produced.}
+
+\item{outfile}{Optional character string specifying a file to which results should be written. Only used if \code{clipboard = FALSE}. If \code{NULL}, output is printed to the console.}
 
 \item{charset}{Character. The text encoding to use when reading files. Default is \code{"UTF-8"}.}
-
-\item{recursive}{Logical. Should the file search be recursive? Default is \code{TRUE}.}
 }
 \value{
-(Invisibly) a character vector containing the concatenated, annotated script text.
+(Invisibly) a character vector containing the concatenated, annotated script text (invisibly).
 }
 \description{
-Concatenate the contents of all \code{.R}, \code{.Rmd}, or \code{.qmd} files, either from a specified list of files
-or by searching a directory. Each script is preceded by a header with its relative filename (from the current working directory)
-and wrapped in an appropriate code fence for use in Markdown documents. The result can be printed to the console
-or written to an output file.
+Concatenate the contents of all \code{.R}, \code{.Rmd}, or \code{.qmd} files either by searching a directory (recursively by default)
+or from a specified list of files. Each script is preceded by a header with its relative filename (from the current working directory)
+and wrapped in an appropriate code fence for Markdown documents.
+}
+\details{
+By default, output is copied to the system clipboard. If \code{clipboard = TRUE}, no file or console output is produced.
+If \code{clipboard = FALSE} and \code{outfile} is supplied, results are written to a file.
+Otherwise, results are printed to the console.
 }
 \examples{
 \dontrun{
-# Concatenate all .R, .Rmd, and .qmd files recursively in the current directory and print result
 concat_scripts()
-
-# Specify a directory, non-recursively
 concat_scripts(dir = "scripts", recursive = FALSE)
-
-# Pipe in a custom file list
-myfiles <- list.files("R", pattern = "\\\\.(R|Rmd|qmd)$", ignore.case = TRUE, full.names = TRUE)
+myfiles <- list.files("R", pattern = "\\\\.(R|Rmd|qmd)$", full.names = TRUE)
 concat_scripts(files = myfiles)
-
-# Write concatenation to a markdown file
-concat_scripts(dir = "vignettes", output_file = "all_code.md")
+concat_scripts(dir = "vignettes", outfile = "all_code.md", clipboard = FALSE)
 }
 }

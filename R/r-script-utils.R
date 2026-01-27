@@ -1,47 +1,40 @@
 #' Concatenate R, R Markdown, and Quarto Scripts
 #'
-#' Concatenate the contents of all `.R`, `.Rmd`, or `.qmd` files, either from a specified list of files
-#' or by searching a directory. Each script is preceded by a header with its relative filename (from the current working directory)
-#' and wrapped in an appropriate code fence for use in Markdown documents. The result can be printed to the console
-#' or written to an output file.
+#' Concatenate the contents of all `.R`, `.Rmd`, or `.qmd` files either by searching a directory (recursively by default)
+#' or from a specified list of files. Each script is preceded by a header with its relative filename (from the current working directory)
+#' and wrapped in an appropriate code fence for Markdown documents.
 #'
-#' @param files Optional character vector of file paths to concatenate. If `NULL` (default), the function
-#'   will search \code{dir} for files matching \code{pattern}.
-#' @param dir Character. Directory in which to search for files. Used only if \code{files} is \code{NULL}.
-#'   Defaults to the current working directory.
-#' @param pattern Character. Regular expression specifying the file types to include. By default,
-#'   matches all files ending with `.R`, `.Rmd`, or `.qmd` (case-insensitive).
-#' @param output_file Optional character string specifying a file to which results should be written.
-#'   If \code{NULL} (default), output is printed to the console.
-#' @param charset Character. The text encoding to use when reading files. Default is `"UTF-8"`.
-#' @param recursive Logical. Should the file search be recursive? Default is `TRUE`.
-#' @return (Invisibly) a character vector containing the concatenated, annotated script text.
+#' By default, output is copied to the system clipboard. If `clipboard = TRUE`, no file or console output is produced.
+#' If `clipboard = FALSE` and `outfile` is supplied, results are written to a file.
+#' Otherwise, results are printed to the console.
+#'
+#' @param dir Character. Directory in which to search for files. Ignored if \code{files} is provided. Defaults to current working directory.
+#' @param files Optional character vector of file paths to concatenate. If \code{NULL} (default), the function will search \code{dir} for files matching \code{pattern}.
+#' @param pattern Character. Regular expression specifying the file types to include. By default, matches all files ending with `.R`, `.Rmd`, or `.qmd` (case-insensitive).
+#' @param recursive Logical. Should the file search be recursive in \code{dir}? Default is \code{TRUE}.
+#' @param clipboard Logical. If \code{TRUE} (default), concatenated output is copied to the system clipboard (macOS/Windows/Linux supported) and no file or console output is produced.
+#' @param outfile Optional character string specifying a file to which results should be written. Only used if \code{clipboard = FALSE}. If \code{NULL}, output is printed to the console.
+#' @param charset Character. The text encoding to use when reading files. Default is \code{"UTF-8"}.
+#' @return (Invisibly) a character vector containing the concatenated, annotated script text (invisibly).
 #' @examples
 #' \dontrun{
-#' # Concatenate all .R, .Rmd, and .qmd files recursively in the current directory and print result
 #' concat_scripts()
-#'
-#' # Specify a directory, non-recursively
 #' concat_scripts(dir = "scripts", recursive = FALSE)
-#'
-#' # Pipe in a custom file list
-#' myfiles <- list.files("R", pattern = "\\.(R|Rmd|qmd)$", ignore.case = TRUE, full.names = TRUE)
+#' myfiles <- list.files("R", pattern = "\\.(R|Rmd|qmd)$", full.names = TRUE)
 #' concat_scripts(files = myfiles)
-#'
-#' # Write concatenation to a markdown file
-#' concat_scripts(dir = "vignettes", output_file = "all_code.md")
+#' concat_scripts(dir = "vignettes", outfile = "all_code.md", clipboard = FALSE)
 #' }
 #' @export
 concat_scripts <- function(
-  files = NULL,
-  dir = ".",
-  pattern = "\\.(R|Rmd|qmd)$",
-  output_file = NULL,
-  charset = "UTF-8",
-  recursive = TRUE,
-  clipboard = TRUE
+    dir = ".",
+    files = NULL,
+    pattern = "\\.(R|Rmd|qmd)$",
+    recursive = TRUE,
+    clipboard = TRUE,
+    outfile = NULL,
+    charset = "UTF-8"
 ) {
-  # Step 1: Get list of files if files not provided
+  # If the user hasn't provided specific files, find all matching files in the directory.
   if (is.null(files)) {
     files <- list.files(
       path = dir,
@@ -51,32 +44,30 @@ concat_scripts <- function(
       recursive = recursive
     )
   }
-
-  # Step 2: If no files found, exit gracefully
+  
+  # Graceful exit if no matching files were found.
   if (length(files) == 0) {
     message("No matching script files found to concatenate.")
     return(invisible(character()))
   }
-
-  # Step 4: Process all files and collect output
-  all_text <- vapply(files, process_file, charset = charset, FUN.VALUE = character(1), USE.NAMES = FALSE)
   
-  # Step 5: Output the result to console or file
-  if (is.null(output_file)) {
-    cat(all_text, sep = "\n")
-  } else {
-    writeLines(all_text, output_file, useBytes = TRUE)
-    message("Wrote concatenated scripts to: ", output_file)
-  }
-
-  # Step 6: Copy to clipboard if requested
+  # Read and concatenate contents, annotate each file for markdown output.
+  all_text <- vapply(files, process_file, charset = charset, FUN.VALUE = character(1), USE.NAMES = FALSE)
+  txt <- paste(all_text, collapse = "\n")
+  
+  # Prefer clipboard output if requested, then file, then console.
   if (clipboard) {
-    txt <- paste(all_text, collapse = "\n")
     copy_to_clipboard(txt)
     message("Output copied to clipboard!")
+    return(invisible(all_text))
+  } else if (!is.null(outfile)) {
+    writeLines(all_text, outfile, useBytes = TRUE)
+    message("Wrote concatenated scripts to: ", outfile)
+    return(invisible(all_text))
+  } else {
+    cat(all_text, sep = "\n")
+    return(invisible(all_text))
   }
-
-  invisible(all_text)
 }
 
 # Copy to clipboard
