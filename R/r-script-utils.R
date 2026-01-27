@@ -79,7 +79,8 @@ concat_scripts <- function(
   invisible(all_text)
 }
 
-# Helper: Copy to clipboard (unexported)
+# Copy to clipboard
+#' @noRd
 copy_to_clipboard <- function(txt) {
   sysname <- Sys.info()[["sysname"]]
   if (sysname == "Windows") {
@@ -108,14 +109,16 @@ copy_to_clipboard <- function(txt) {
   }
 }
 
-# Helper: Extracts and lowercases the file extension (unexported)
+# Extracts and lowercases the file extension
+#' @noRd
 get_file_ext <- function(filename) {
   fname <- basename(filename)
   ext <- sub(".*\\.", "", fname)
   ifelse(grepl("\\.", fname), tolower(ext), "")
 }
 
-# Helper: Get relative path from current working directory (unexported)
+# Get relative path from current working directory
+#' @noRd
 get_rel_path <- function(path) {
   wd <- normalizePath(getwd(), winslash = "/", mustWork = TRUE)
   abs <- normalizePath(path, winslash = "/", mustWork = FALSE)
@@ -126,7 +129,8 @@ get_rel_path <- function(path) {
   }
 }
 
-# Helper: Process a single file and return annotated text (unexported)
+# Process a single file and return annotated text
+#' @noRd
 process_file <- function(file, charset) {
   fname <- get_rel_path(file)
   ext <- get_file_ext(fname)
